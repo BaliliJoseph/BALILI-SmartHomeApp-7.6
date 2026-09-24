@@ -1,45 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useIoT } from '../../context/IoTContext';
 
-
-
 export default function DashboardScreen() {
-    // const [deviceStatus, setDeviceStatus] = useState(
-    //     devices.reduce((acc, device) => {
-    //         acc[device.id] = device.status;
-    //         return acc;
-    //     }, {} as Record<number, boolean>)
-    // );
-
-    const { devices, 
-        sensors, 
-        toggleDevice } = useIoT();
+    const { devices, sensors, toggleDevice } = useIoT();
 
     return (
         <View style={styles.container}>
-
-            <Text style={styles.greeting}>
-                Good evening
-            </Text>
-
-            <Text style={styles.title}>
-                IoT Dashboard
-            </Text>
+            <Text style={styles.greeting}>Good evening</Text>
+            <Text style={styles.title}>IoT Dashboard</Text>
 
             <View style={styles.sensorRow}>
-
                 <View style={styles.sensorCard}>
                     <View style={styles.sensorHeader}>
-                        <Ionicons
-                            name="water-outline"
-                            size={22}
-                        />
-
-                        <Text style={styles.sensorLabel}>
-                            Temperature
-                        </Text>
+                        <Ionicons name="water-outline" size={22} />
+                        <Text style={styles.sensorLabel}>Temperature</Text>
                     </View>
 
                     <Text style={styles.sensorValue}>
@@ -49,63 +25,21 @@ export default function DashboardScreen() {
 
                 <View style={styles.sensorCard}>
                     <View style={styles.sensorHeader}>
-                        <Ionicons
-                            name="water-outline"
-                            size={22}
-                        />
-
-                        <Text style={styles.sensorLabel}>
-                            Humidity
-                        </Text>
+                        <Ionicons name="water-outline" size={22} />
+                        <Text style={styles.sensorLabel}>Humidity</Text>
                     </View>
 
                     <Text style={styles.sensorValue}>
                         {sensors.humidity}%
                     </Text>
                 </View>
-
             </View>
 
-            <Text style={styles.sectionTitle}>
-                Device Status
-            </Text>
-
-            {/* <View style={styles.deviceCard}>
-
-                <View style={styles.deviceInfo}>
-                    <Text style={styles.deviceIcon}>
-                        💡
-                    </Text>
-
-                    <View>
-                        <Text style={styles.deviceName}>
-                            Living Room Light
-                        </Text>
-
-                        <Text style={styles.deviceType}>
-                            Smart Light
-                        </Text>
-                    </View>
-                </View>
-
-                <Text style={styles.deviceStatus}>
-                    ON
-                </Text>
-
-            </View>
-
-        </View>
-    ); */}
+            <Text style={styles.sectionTitle}>Device Status</Text>
 
             {devices.map((device) => (
-
-                <View
-                    key={device.id}
-                    style={styles.deviceCard}
-                >
-
+                <View key={device.id} style={styles.deviceCard}>
                     <View style={styles.deviceInfo}>
-
                         <Ionicons
                             name={device.icon}
                             size={28}
@@ -123,25 +57,19 @@ export default function DashboardScreen() {
                                 </Text>
                             </Text>
                         </View>
-
                     </View>
 
                     <Switch
                         value={device.status}
-                        onValueChange={(value) => {
-                            toggleDevice(device.id, value);
-                        }}
+                        onValueChange={(value) => toggleDevice(device.id, value)}
                     />
-
                 </View>
-
             ))}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-
     container: {
         flex: 1,
         padding: 20,
@@ -168,6 +96,12 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 12,
         backgroundColor: '#eeeeee',
+    },
+
+    sensorHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
     },
 
     sensorLabel: {
@@ -216,20 +150,10 @@ const styles = StyleSheet.create({
         marginTop: 3,
     },
 
+    deviceState: {},
+
     deviceStatus: {
         fontSize: 14,
         fontWeight: 'bold',
     },
-
-    sensorHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
-    },
-
-    deviceState:{
-
-    }
-
-
 });
