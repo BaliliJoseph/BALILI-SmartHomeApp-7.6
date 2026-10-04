@@ -1,54 +1,97 @@
-import { Device, SensorData, sampleDevices } from '../models/IoTModels';
+import {
+  Device,
+  SensorData,
+  sampleDevices,
+} from '../models/IoTModels';
 
-function delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+const MOCK_DELAY = {
+  devices: 800,
+  sensors: 900,
+  updateDevice: 600,
+};
+
+const MOCK_FAILURE_RATE = 0.05;
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-let deviceState: Device[] = sampleDevices.map((device) => ({ ...device }));
+function shouldFail(): boolean {
+  return Math.random() < MOCK_FAILURE_RATE;
+}
+
+function randomInteger(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function cloneDevice(device: Device): Device {
+  return { ...device };
+}
+
+let deviceState: Device[] = sampleDevices.map(cloneDevice);
+
 
 export async function getDevices(): Promise<Device[]> {
-    await delay(1000);
+  await delay(MOCK_DELAY.devices);
 
-    if (Math.random() < 0.1) {
-        throw new Error('Failed to fetch devices from gateway');
-    }
+  if (shouldFail()) {
+    throw new Error('Unable to retrieve devices from the IoT gateway.');
+  }
 
-    return deviceState.map((device) => ({ ...device }));
+  return deviceState.map(cloneDevice);
 }
+
 
 export async function getSensorData(): Promise<SensorData> {
-    await delay(1200);
+  await delay(MOCK_DELAY.sensors);
 
-    if (Math.random() < 0.1) {
-        throw new Error('Failed to fetch sensor data');
-    }
+  if (shouldFail()) {
+    throw new Error('Unable to retrieve sensor data.');
+  }
 
-    return {
-        temperature: Math.floor(Math.random() * (35 - 18 + 1)) + 18,
-        humidity: Math.floor(Math.random() * (80 - 40 + 1)) + 40,
-        lightLevel: Math.floor(Math.random() * (1000 - 200 + 1)) + 200,
-    };
+  return {
+    temperature: randomInteger(18, 35),
+    humidity: randomInteger(40, 80),
+    lightLevel: randomInteger(200, 1000),
+  };
 }
 
+
 export async function updateDeviceStatus(
-    id: number,
-    status: boolean
+  id: number,
+  status: boolean
 ): Promise<Device> {
-    await delay(800);
+  await delay(MOCK_DELAY.updateDevice);
 
-    if (Math.random() < 0.1) {
-        throw new Error(`Failed to update device ${id}`);
-    }
+  const existingDevice = deviceState.find(
+    (device) => device.id === id
+  );
 
-    deviceState = deviceState.map((device) =>
-        device.id === id ? { ...device, status } : device
+  if (!existingDevice) {
+    throw new Error(`Device with ID ${id} was not found.`);
+  }
+
+  if (shouldFail()) {
+    throw new Error(
+      `Unable to update ${existingDevice.name}.`
     );
+  }
 
-    const updated = deviceState.find((device) => device.id === id);
+  const updatedDevice: Device = {
+    ...existingDevice,
+    status,
+  };
 
-    if (!updated) {
-        throw new Error(`Device ${id} not found`);
-    }
+  deviceState = deviceState.map((device) =>
+    device.id === id
+      ? updatedDevice
+      : device
+  );
 
-    return { ...updated };
+  return cloneDevice(updatedDevice);
+}
+
+
+export function resetMockDevices(): void {
+  deviceState = sampleDevices.map(cloneDevice);
 }

@@ -15,16 +15,52 @@ export default function DrawerNavigator() {
     <Drawer.Navigator
       drawerContent={(props) => (
         <CustomDrawerContent {...props} />
-      )}>
+      )}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#FFFFFF',
+        },
 
+        headerTintColor: '#222',
+
+        headerTitleStyle: {
+          fontWeight: '600',
+        },
+
+        headerShadowVisible: false,
+
+        drawerActiveTintColor: '#4E7D56',
+        drawerInactiveTintColor: '#666',
+
+        drawerActiveBackgroundColor: '#EAF4EC',
+
+        drawerLabelStyle: {
+          marginLeft: -5,
+          fontSize: 14,
+          fontWeight: '500',
+        },
+
+        drawerItemStyle: {
+          borderRadius: 10,
+          marginHorizontal: 10,
+          marginVertical: 3,
+        },
+
+        sceneStyle: {
+          backgroundColor: '#F8F8F8',
+        },
+      }}
+    >
       <Drawer.Screen
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          drawerIcon: ({ size }) => (
+          title: 'Dashboard',
+          drawerIcon: ({ size, color }) => (
             <Ionicons
               name="grid-outline"
               size={size}
+              color={color}
             />
           ),
         }}
@@ -34,10 +70,12 @@ export default function DrawerNavigator() {
         name="Sensors"
         component={SensorsScreen}
         options={{
-          drawerIcon: ({ size }) => (
+          title: 'Sensors',
+          drawerIcon: ({ size, color }) => (
             <Ionicons
               name="analytics-outline"
               size={size}
+              color={color}
             />
           ),
         }}
@@ -47,10 +85,12 @@ export default function DrawerNavigator() {
         name="Devices"
         component={DevicesScreen}
         options={{
-          drawerIcon: ({ size }) => (
+          title: 'Devices',
+          drawerIcon: ({ size, color }) => (
             <Ionicons
               name="hardware-chip-outline"
               size={size}
+              color={color}
             />
           ),
         }}
@@ -60,15 +100,16 @@ export default function DrawerNavigator() {
         name="Settings"
         component={SettingsScreen}
         options={{
-          drawerIcon: ({ size }) => (
+          title: 'Settings',
+          drawerIcon: ({ size, color }) => (
             <Ionicons
               name="settings-outline"
               size={size}
+              color={color}
             />
           ),
         }}
       />
-
     </Drawer.Navigator>
   );
 }
